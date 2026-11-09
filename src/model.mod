@@ -45,6 +45,13 @@ subject to {
     // Constraint 1 (min profit)
     T <= sum(i in 1..N) P[i] * A[i];
 
+    // Constraint 2 (minimum run length)
+    
+
+    // Constraint 3 (maximum run length)
+    forall (i in 1..N-U)
+      U >= sum(j in i..i+U) A[j];
+
     //<<<<<<<<<<<<<<<<
 }
 

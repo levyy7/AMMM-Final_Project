@@ -16,6 +16,7 @@ int E[1..N] = ...;
 //>>>>>>>>>>>>>>>>
 
 dvar boolean A[1..N]; // A[i]: is machine active at moment i?
+dvar boolean S[1..N]; // Auxiliary variable indicating that the machine started being active at time i.
 
 //<<<<<<<<<<<<<<<<
 
@@ -41,12 +42,22 @@ subject to {
     // Write here the constraints.
 
     //>>>>>>>>>>>>>>>>
+    
+    // Definition of S dvar
+    S[1] == A[1];
+    forall (i in 2..N)
+      S[i] >= A[i] - A[i - 1];
+
 
     // Constraint 1 (min profit)
     T <= sum(i in 1..N) P[i] * A[i];
 
     // Constraint 2 (minimum run length)
+    forall (i in 1..N-L+1)
+      L * S[i] <= sum(j in i..i+L-1) A[j];
     
+    forall (i in N-L+2..N)
+      S[i] == 0;
 
     // Constraint 3 (maximum run length)
     forall (i in 1..N-U)

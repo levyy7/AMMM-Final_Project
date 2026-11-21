@@ -4,7 +4,7 @@
 
 set -u
 
-MODEL="${MODEL:-src/model.mod}"
+MODEL="${MODEL:-src/cplex/model.mod}"
 CHECKER="src/checker.py"
 DATA_DIR="${1:-data}"
 OUT_DIR="output"

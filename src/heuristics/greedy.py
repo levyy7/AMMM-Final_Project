@@ -1,5 +1,6 @@
 import sys
 from instance import Instance
+import random
 
 INF = float("inf")
 
@@ -46,15 +47,28 @@ def free_profit(inst, blocks):
         total += run_sum
     return total
 
-def construct(inst):
+def construct(inst, alpha=0.0):
     cands = inst.candidates()
     blocks = []
     profit = 0
     while profit < inst.T:
         need = inst.T - profit
         evaluated = sorted(evaluate_candidate(inst, cands, blocks, need))
+        if not evaluated:
+            return None
+
+        if alpha == 0:
+            order = evaluated
+        else:
+            q_min = evaluated[0][0]
+            q_max = evaluated[-1][0]
+            threshold = q_min + alpha * (q_max - q_min)
+            rcl = [c for c in evaluated if c[0] <= threshold]
+            random.shuffle(rcl)
+            order = rcl + evaluated
+
         chosen = None
-        for (q, a, b) in evaluated:
+        for (q, a, b) in order:
             if profit + inst.profit(a, b) + free_profit(inst, blocks + [(a, b)]) >= inst.T:
                 chosen = (q, a, b)
                 break
@@ -63,7 +77,6 @@ def construct(inst):
         q, a, b = chosen
         blocks.append((a, b))
         profit += inst.profit(a, b)
-        print(f"Selected block: ({a}, {b}) need {need} cost {q:.4f}")
     return sorted(blocks)
 
 def write_solution(path, blocks):

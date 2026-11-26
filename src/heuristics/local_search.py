@@ -51,7 +51,6 @@ def local_search(inst, blocks):
                     best_blocks = sorted(kept + [(cand[1], cand[2])])
 
         if best_blocks is not None:        
-            print(f"  improved: {energy} -> {best_energy}  {best_blocks}")
             blocks = best_blocks
             energy, profit = total(inst, blocks)
             improved = True                
